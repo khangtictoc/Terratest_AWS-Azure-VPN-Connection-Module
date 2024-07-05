@@ -1,5 +1,4 @@
-## ENVIRONMENT
-
+## ========== ENVIRONMENT ========== ##
 tags = {
   createdBy   = "Terraform"
   author      = "khangtictoc"
@@ -7,18 +6,15 @@ tags = {
   project     = "lab_extra_03"
 }
 
-
 ### AZURE ###
-
-az_subscription_id = 
-az_tenant_id        = 
-az_client_id       =
-az_client_secret = 
+az_subscription_id = ""
+az_tenant_id = ""
+az_client_id     = ""
+az_client_secret = ""
 
 ### AWS ###
-
-aws_access_key = 
-aws_secret_key = 
+aws_access_key = ""
+aws_secret_key = ""
 region = "us-east-1"
 
 ### Azure working space ###
@@ -33,9 +29,7 @@ resource_group = [
   }
 ]
 
-
 ##### VPN Site-to-Site Configuration #####
-
 s2s_vpn_connection_config = {
   # AWS VPN Network
   aws_vpn_network = {
@@ -51,6 +45,9 @@ s2s_vpn_connection_config = {
     }
     virtual_private_gateway = {
       name = "vpn-gateway"
+    }
+    internet_gateway = {
+      name = "internet-gateway-vpn-test"
     }
   }
 
@@ -186,6 +183,7 @@ s2s_vpn_connection_config = {
   ]
 }
 
+##### VMs Demo #####
 aws_vm_config_demo = [
   {
     keypair = {
@@ -197,6 +195,19 @@ aws_vm_config_demo = [
       instance_type = "t2.medium"
       user_data_file = null
       associate_public_ip_address = true
+
+      ebs_block_device = {
+        device_name = "/dev/sda1"
+        volume_size = 30
+      }
+
+      instance_market_options = {
+        market_type = "spot"
+        spot_options = {
+          instance_interruption_behavior = "terminate"
+          max_price = null
+        }
+      }
     }
     security_group = {
       name        = "AllowAll"
@@ -227,9 +238,9 @@ azure_vm_config_demo = [
       name                  = "source01"
       size                  = "Standard_F1s"
       admin_username        = "azureadmin"
-      computer_name  = "myLinuxAgent"
+      computer_name  = "myLinuxAgent01"
       os_disk = {
-        name                 = "myOsDisk"
+        name                 = "myOsDisk01"
         caching              = "ReadWrite"
         storage_account_type = "Standard_LRS"
       }
@@ -240,20 +251,84 @@ azure_vm_config_demo = [
         version   = "latest"
       }
       public_key_path = "./credentials/azure/private_key/id_rsa.pub"
+
+      eviction_policy = "Delete"
+      priority        = "Spot"
     }
     network_interface = {
-      name = "myNIC"
+      name = "myNIC01"
       ip_configuration = {
         name                          = "internal"
         private_ip_address_allocation = "Dynamic"
       }
       public_ip = {
-        name = "myPublicIP"
+        name = "myPublicIP01"
         allocation_method = "Dynamic"
       }
     }
     network_security_group = {
-      name = "myNSG"
+      name = "myNSG01"
+      security_rule = [
+        {
+          name                       = "AllowAllInbound"
+          priority                   = 100
+          direction                  = "Inbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "*"
+          source_address_prefix      = "*"
+          destination_address_prefix = "*"
+        },
+        {
+          name                       = "AllowAllOutbound"
+          priority                   = 100
+          direction                  = "Outbound"
+          access                     = "Allow"
+          protocol                   = "Tcp"
+          source_port_range          = "*"
+          destination_port_range     = "*"
+          source_address_prefix      = "*"
+          destination_address_prefix = "*"
+        }
+      ]
+    }
+  },
+  {
+    virtual_machine = {
+      name                  = "source02"
+      size                  = "Standard_F1s"
+      admin_username        = "azureadmin"
+      computer_name  = "myLinuxAgent02"
+      os_disk = {
+        name                 = "myOsDisk02"
+        caching              = "ReadWrite"
+        storage_account_type = "Standard_LRS"
+      }
+      source_image_reference = {
+        publisher = "Canonical"
+        offer     = "0001-com-ubuntu-server-focal"
+        sku       = "20_04-lts"
+        version   = "latest"
+      }
+      public_key_path = "./credentials/azure/private_key/id_rsa.pub"
+
+      eviction_policy = "Delete"
+      priority        = "Spot"
+    }
+    network_interface = {
+      name = "myNIC02"
+      ip_configuration = {
+        name                          = "internal"
+        private_ip_address_allocation = "Dynamic"
+      }
+      public_ip = {
+        name = "myPublicIP02"
+        allocation_method = "Dynamic"
+      }
+    }
+    network_security_group = {
+      name = "myNSG02"
       security_rule = [
         {
           name                       = "AllowAllInbound"

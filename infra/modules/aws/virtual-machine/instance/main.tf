@@ -9,9 +9,18 @@ resource "aws_instance" "instance" {
   user_data = var.instance_config.user_data_file
 
   ebs_block_device {
-    device_name = "/dev/sda1"
-    volume_size = 30
+    device_name = var.instance_config.ebs_block_device.device_name
+    volume_size = var.instance_config.ebs_block_device.volume_size
   }
+
+  instance_market_options {
+    market_type = var.instance_config.instance_market_options.market_type
+    spot_options {
+      instance_interruption_behavior = var.instance_config.instance_market_options.spot_options.instance_interruption_behavior
+      max_price = var.instance_config.instance_market_options.spot_options.max_price
+    }
+  }
+
   tags = merge(
     var.tags,
     {

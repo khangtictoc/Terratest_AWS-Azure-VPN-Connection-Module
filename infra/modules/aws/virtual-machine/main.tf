@@ -27,4 +27,15 @@ module "ec2_instance" {
 resource "local_file" "aws_private_ssh_key" {
     content  = module.keypair.ssh_private_key
     filename = "credentials/aws/private_key"
+    file_permission = "0400"
+}
+
+resource "null_resource" "add_host_key" {
+  triggers = {
+    always_run = module.ec2_instance.instance_id
+  }
+
+  provisioner "local-exec" {
+    command = "ssh-keyscan -t rsa ${module.ec2_instance.public_ip} >> C:\\Users\\tranh\\.ssh\\known_hosts"
+  }
 }

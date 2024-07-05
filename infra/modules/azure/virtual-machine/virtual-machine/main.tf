@@ -23,6 +23,9 @@ resource "azurerm_linux_virtual_machine" "virtual_machine" {
     public_key = file(var.virtual_machine_config.public_key_path)
   }
 
+  eviction_policy = var.virtual_machine_config.eviction_policy
+  priority        = var.virtual_machine_config.priority
+  
   location            = var.resource_group.location
   resource_group_name = var.resource_group.name
 }
