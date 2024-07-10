@@ -7,14 +7,14 @@ tags = {
 }
 
 ### AZURE ###
-az_subscription_id = ""
-az_tenant_id = ""
-az_client_id     = ""
-az_client_secret = ""
+az_subscription_id = 
+az_tenant_id = 
+az_client_id     = 
+az_client_secret = 
 
 ### AWS ###
-aws_access_key = ""
-aws_secret_key = ""
+aws_access_key = 
+aws_secret_key = 
 region = "us-east-1"
 
 ### Azure working space ###
