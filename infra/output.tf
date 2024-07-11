@@ -27,7 +27,7 @@ output azure_vnet_info {
 
 # ------------------ [TEST 3] TEST PING BETWEEN AWS INSTANCE & AZURE VM ------------------
 
-output aws_instance_public_ip {
+output aws_instance_public_ip_list {
     value = module.aws_virtual_machine_demo.*.ec2_instance.public_ip
 }
 
