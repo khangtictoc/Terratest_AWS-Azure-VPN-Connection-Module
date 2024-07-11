@@ -8,6 +8,7 @@ import (
 	"myterraform/utils"
 	"os"
 	"testing"
+	"time"
 
 	// SSH Connection and Command Execution
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -25,13 +26,15 @@ func Test_SiteToSiteVPN_AWSAzure_Connection_Apply(t *testing.T) {
 	})
 
 	// DESTROY
-	//defer terraform.Destroy(t, terraformOptions)
+	defer terraform.Destroy(t, terraformOptions)
 
 	// CREATE
 	terraform.InitAndApply(t, terraformOptions)
 	// Wait for updating some configuration and figures in VPN Tunnel
-	fmt.Println("WAITING FOR VPN TUNNEL TO BE UP AND RUNNING (15 MINUTES)...")
-	//time.Sleep(20 * time.Minute)
+	fmt.Println("WAITING FOR VPN TUNNEL TO BE UP AND RUNNING (5 MINUTES)...")
+	time.Sleep(5 * time.Minute)
+	// Refresh and update the state of VPN tunnel
+	terraform.InitAndApply(t, terraformOptions)
 
 	fmt.Println("+---------------------------------------------")
 	fmt.Println("| [PREPARE] VPN Connection Status Testing")
